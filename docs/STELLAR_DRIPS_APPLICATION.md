@@ -7,7 +7,7 @@
 ## 1. Project Overview & Mission
 
 - **Project Name**: MilestonePay
-- **Repository**: `https://github.com/milestonepay/milestonepay`
+- **Repository**: `https://github.com/oaks-labs/milestone-pay`
 - **Primary Category**: Developer Tools, Real-World Payments, Smart Contract Infrastructure
 - **Target Audience**: Independent developers, creative freelancers, open-source maintainers, and small agencies conducting milestone-based contracting on Stellar.
 

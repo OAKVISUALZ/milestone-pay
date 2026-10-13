@@ -24,8 +24,8 @@ docker --version
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/milestonepay/milestonepay.git
-   cd milestonepay
+   git clone https://github.com/oaks-labs/milestone-pay.git
+   cd milestone-pay
    ```
 
 2. **Install Node dependencies**:

@@ -2,7 +2,7 @@
 
 > **Milestone-based freelance escrow on Stellar Soroban (Testnet MVP).**
 
-[![CI](https://github.com/OAKVISUALZ/milestone-pay/actions/workflows/ci.yml/badge.svg)](https://github.com/OAKVISUALZ/milestone-pay/actions)
+[![CI](https://github.com/oaks-labs/milestone-pay/actions/workflows/ci.yml/badge.svg)](https://github.com/oaks-labs/milestone-pay/actions)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![Soroban](https://img.shields.io/badge/Soroban_SDK-v21-purple.svg)](https://developers.stellar.org/docs/smart-contracts)
 [![Stellar](https://img.shields.io/badge/Stellar-Testnet-black.svg)](https://stellar.expert/explorer/testnet)
