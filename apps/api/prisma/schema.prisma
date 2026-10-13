@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AuthChallenge {
+  id                String   @id @default(uuid())
+  publicKey         String
+  nonce             String   @unique
+  domain            String
+  networkPassphrase String
+  expiresAt         DateTime
+  used              Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  @@index([publicKey])
+  @@index([nonce])
+}
+
+model Project {
+  id                  String      @id @default(uuid())
+  agreementId         Int?        @unique
+  title               String
+  description         String
+  clientAddress       String
+  freelancerAddress   String
+  tokenAddress        String
+  status              String      @default("ACTIVE")
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  milestones          Milestone[]
+
+  @@index([clientAddress])
+  @@index([freelancerAddress])
+  @@index([agreementId])
+}
+
+model Milestone {
+  id                     String    @id @default(uuid())
+  projectId              String
+  project                Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  milestoneIndex         Int       @default(1)
+  title                  String
+  deliverableCriteria    String
+  amountStroops          String
+  status                 String    @default("CREATED")
+  deliverableUrl         String?
+  deliverableNotes       String?
+  deliverableHash        String?
+  deliverableSubmittedAt DateTime?
+  fundedTxHash           String?
+  releasedTxHash         String?
+  refundedTxHash         String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  @@unique([projectId, milestoneIndex])
+  @@index([status])
+}
+
+model IndexerState {
+  id         String   @id @default("default")
+  contractId String
+  lastCursor String?
+  lastLedger Int      @default(0)
+  updatedAt  DateTime @updatedAt
+}
+
+model ProcessedEvent {
+  id          String   @id
+  contractId  String
+  eventType   String
+  ledger      Int
+  txHash      String?
+  agreementId Int?
+  milestoneId Int?
+  payload     String
+  processedAt DateTime @default(now())
+
+  @@index([contractId])
+  @@index([eventType])
+}
+
+model RefundProposal {
+  id               String    @id @default(uuid())
+  projectId        String
+  milestoneId      String
+  agreementId      Int
+  milestoneIndex   Int
+  initiatorAddress String
+  envelopeXdr      String    @db.Text
+  txHash           String
+  clientSigned     Boolean   @default(false)
+  freelancerSigned Boolean   @default(false)
+  status           String    @default("PROPOSED")
+  submittedTxHash  String?
+  expiresAt        DateTime
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([projectId, milestoneId])
+  @@index([status])
+}
+

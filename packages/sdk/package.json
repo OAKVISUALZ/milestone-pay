@@ -1,0 +1,20 @@
+{
+  "name": "@milestone-pay/sdk",
+  "version": "0.1.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "example:mutual-refund": "tsx examples/mutual-refund.ts"
+  },
+  "dependencies": {
+    "@milestone-pay/shared": "*",
+    "@stellar/stellar-sdk": "^13.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.7"
+  }
+}

@@ -1,0 +1,21 @@
+# MilestonePay Codeowners
+# Syntax: path @owner
+
+# Default maintainers for monorepo
+* @milestonepay-core-maintainers
+
+# Soroban Smart Contracts
+/contracts/ @milestonepay-contracts-team @stellar-soroban-lead
+
+# SDK & Client Packages
+/packages/sdk/ @milestonepay-sdk-maintainers
+/packages/shared/ @milestonepay-core-maintainers
+
+# Backend API & Indexer
+/apps/api/ @milestonepay-backend-maintainers
+
+# Frontend Web Application
+/apps/web/ @milestonepay-frontend-maintainers
+
+# Documentation & Specifications
+/docs/ @milestonepay-core-maintainers

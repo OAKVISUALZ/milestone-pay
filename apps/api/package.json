@@ -1,0 +1,39 @@
+{
+  "name": "@milestone-pay/api",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "test": "vitest run tests/api.test.ts",
+    "test:db": "vitest run tests/postgres.integration.test.ts"
+  },
+  "dependencies": {
+    "@milestone-pay/sdk": "*",
+    "@milestone-pay/shared": "*",
+    "@prisma/client": "^6.4.0",
+    "@stellar/stellar-sdk": "^13.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.9",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.9",
+    "@types/supertest": "^6.0.2",
+    "pglite-server": "^0.1.5",
+    "prisma": "^6.4.0",
+    "supertest": "^7.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.7"
+  }
+}

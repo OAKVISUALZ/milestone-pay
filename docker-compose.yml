@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: milestonepay-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: milestonepay
+      POSTGRES_PASSWORD: milestonepay_dev_password
+      POSTGRES_DB: milestonepay_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U milestonepay -d milestonepay_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

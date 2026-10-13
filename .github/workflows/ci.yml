@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  contracts:
+    name: Soroban Smart Contract Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Run Contract Tests
+        working-directory: contracts/escrow
+        run: cargo test --verbose
+
+      - name: Build Contract WASM
+        working-directory: contracts/escrow
+        run: cargo build --target wasm32-unknown-unknown --release
+
+  node-packages:
+    name: TypeScript Packages & Apps Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Typecheck
+        run: npm run typecheck
+
+      - name: Run Test Suites
+        run: npm run test
+
+      - name: Build Packages & Apps
+        run: npm run build
