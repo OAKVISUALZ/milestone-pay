@@ -59,6 +59,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build Shared Packages
+        run: |
+          npm run build --workspace=@milestone-pay/shared
+          npm run build --workspace=@milestone-pay/sdk
+
       - name: Apply Prisma Migrations to PostgreSQL
         run: npx prisma migrate deploy --schema=./apps/api/prisma/schema.prisma
 
