@@ -2,7 +2,7 @@
 
 > **Milestone-based freelance escrow on Stellar Soroban (Testnet MVP).**
 
-[![CI](https://github.com/milestonepay/milestonepay/actions/workflows/ci.yml/badge.svg)](https://github.com/milestonepay/milestonepay/actions)
+[![CI](https://github.com/OAKVISUALZ/milestone-pay/actions/workflows/ci.yml/badge.svg)](https://github.com/OAKVISUALZ/milestone-pay/actions)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![Soroban](https://img.shields.io/badge/Soroban_SDK-v21-purple.svg)](https://developers.stellar.org/docs/smart-contracts)
 [![Stellar](https://img.shields.io/badge/Stellar-Testnet-black.svg)](https://stellar.expert/explorer/testnet)
@@ -11,7 +11,7 @@ MilestonePay helps freelancers, independent developers, and small agencies agree
 
 Stellar performs the actual escrow custody and token settlement on-chain via the Stellar Asset Contract (SAC). Off-chain metadata and deliverable links are indexed by an Express + PostgreSQL service that treats confirmed Soroban contract events as the sole authoritative source for financial state transitions.
 
-> **Verification & Audit Status**: This repository is an open-source **Stellar Testnet MVP**. It has **not** undergone an independent third-party security audit, is **not** deployed to Stellar Mainnet, and makes no claim of program eligibility or endorsement.
+> **Verification & Audit Status**: This repository is an open-source **Stellar Testnet MVP**. It has **not** undergone an independent third-party security audit, is **not** deployed to Stellar Mainnet, and makes no claim of program eligibility or endorsement. Review the verified release report in [`RELEASE_READINESS_REPORT.md`](./RELEASE_READINESS_REPORT.md).
 
 ---
 

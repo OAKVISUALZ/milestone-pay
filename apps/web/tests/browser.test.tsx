@@ -6,6 +6,7 @@ import { CreateProjectModal } from "../src/components/CreateProjectModal.js";
 import { TestnetBanner } from "../src/components/TestnetBanner.js";
 import { DisputeNotice } from "../src/components/DisputeNotice.js";
 import { Header } from "../src/components/Header.js";
+import { MutualRefundModal } from "../src/components/MutualRefundModal.js";
 import { WalletService } from "../src/lib/wallet.js";
 import { CreateProjectSchema, xlmToStroops, TESTNET_XLM_SAC_CONTRACT_ID } from "@milestone-pay/shared";
 
@@ -291,4 +292,54 @@ describe("MilestonePay Browser & UI Component Suite", () => {
       expect(disputeHtml).toContain("until mutual agreement is reached");
     });
   });
+
+  describe("6. Mutual Refund Dual-Authorization Browser Modal & Coordination", () => {
+    const testProject = {
+      id: "proj_123",
+      agreementId: 42,
+      clientAddress: CLIENT_ADDR,
+      freelancerAddress: FREELANCER_ADDR,
+      tokenAddress: TESTNET_XLM_SAC_CONTRACT_ID,
+    };
+
+    const testMilestone = {
+      id: "ms_test_1",
+      milestoneIndex: 1,
+      title: "Soroban Escrow Implementation",
+      amountStroops: "250000000",
+      status: "FUNDED",
+    };
+
+    it("renders MutualRefundModal with dual-authorization disclosure and initiate button when open", () => {
+      const modalHtml = renderToStaticMarkup(
+        <MutualRefundModal
+          isOpen={true}
+          onClose={() => {}}
+          project={testProject}
+          milestone={testMilestone}
+          walletAddress={CLIENT_ADDR}
+        />
+      );
+
+      expect(modalHtml).toContain("Mutual Escrow Refund");
+      expect(modalHtml).toContain("Cryptographic Co-Signing:");
+      expect(modalHtml).toContain("Both the <strong>client</strong> and <strong>freelancer</strong> must authorize");
+      expect(modalHtml).toContain("Initiate &amp; Sign Refund Proposal");
+    });
+
+    it("does not render when isOpen is false", () => {
+      const modalHtml = renderToStaticMarkup(
+        <MutualRefundModal
+          isOpen={false}
+          onClose={() => {}}
+          project={testProject}
+          milestone={testMilestone}
+          walletAddress={CLIENT_ADDR}
+        />
+      );
+
+      expect(modalHtml).toBe("");
+    });
+  });
 });
+

@@ -290,11 +290,15 @@ export default function HomePage() {
                       clientAddress={project.clientAddress}
                       freelancerAddress={project.freelancerAddress}
                       currentAddress={walletAddress}
+                      projectId={project.id}
+                      agreementId={project.agreementId}
+                      tokenAddress={project.tokenAddress}
                       onFund={handleFund}
                       onRelease={handleRelease}
                       onRefund={handleRefund}
                       onCancel={handleCancel}
                       onSubmitDeliverable={handleSubmitDeliverable}
+                      onStatusUpdated={fetchProjects}
                     />
                   ))}
                 </div>

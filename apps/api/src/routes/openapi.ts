@@ -189,9 +189,113 @@ export const openapiSpec = {
             },
           },
         },
+      },
+    },
+    "/api/projects/{projectId}/milestones/{milestoneId}/refund": {
+      get: {
+        summary: "Get active refund proposal",
+        description: "Retrieves the current pending, co-signed, or submitted refund proposal for a milestone.",
+        parameters: [
+          { name: "projectId", in: "path", required: true, schema: { type: "string" } },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "string" } },
+        ],
         responses: {
-          "200": { description: "Deliverable reference saved" },
-          "403": { description: "Only assigned freelancer can submit deliverable" },
+          "200": { description: "Current refund proposal or null" },
+          "401": { description: "Authentication required" },
+          "403": { description: "Not a participant in the project" },
+        },
+      },
+    },
+    "/api/projects/{projectId}/milestones/{milestoneId}/refund/propose": {
+      post: {
+        summary: "Propose mutual refund",
+        description: "Initiates a refund proposal with the proposer's signature on the Soroban refund transaction.",
+        parameters: [
+          { name: "projectId", in: "path", required: true, schema: { type: "string" } },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "string" } },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["envelopeXdr"],
+                properties: { envelopeXdr: { type: "string" } },
+              },
+            },
+          },
+        },
+        responses: {
+          "201": { description: "Refund proposal initiated" },
+          "400": { description: "Invalid envelope or parameter mismatch" },
+          "409": { description: "Active proposal already exists" },
+        },
+      },
+    },
+    "/api/projects/{projectId}/milestones/{milestoneId}/refund/sign": {
+      post: {
+        summary: "Counter-sign refund proposal",
+        description: "Appends the counter-party's signature to the proposed refund transaction.",
+        parameters: [
+          { name: "projectId", in: "path", required: true, schema: { type: "string" } },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "string" } },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["envelopeXdr"],
+                properties: { envelopeXdr: { type: "string" } },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "Signature recorded, status updated to CO_SIGNED" },
+          "400": { description: "Hash mismatch or missing signature" },
+        },
+      },
+    },
+    "/api/projects/{projectId}/milestones/{milestoneId}/refund/submit": {
+      post: {
+        summary: "Submit co-signed refund transaction",
+        description: "Submits the fully co-signed refund transaction to the Stellar Soroban network.",
+        parameters: [
+          { name: "projectId", in: "path", required: true, schema: { type: "string" } },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "string" } },
+        ],
+        responses: {
+          "200": { description: "Transaction submitted to network" },
+          "400": { description: "Submission failed or proposal not co-signed" },
+        },
+      },
+    },
+    "/api/projects/{projectId}/milestones/{milestoneId}/refund/recheck": {
+      post: {
+        summary: "Recheck submitted refund transaction status",
+        description: "Polls Soroban RPC for confirmed status of submitted refund transaction.",
+        parameters: [
+          { name: "projectId", in: "path", required: true, schema: { type: "string" } },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "string" } },
+        ],
+        responses: {
+          "200": { description: "Transaction status checked" },
+        },
+      },
+    },
+    "/api/projects/{projectId}/milestones/{milestoneId}/refund/reject": {
+      post: {
+        summary: "Reject refund proposal",
+        description: "Rejects or cancels an unsubmitted refund proposal.",
+        parameters: [
+          { name: "projectId", in: "path", required: true, schema: { type: "string" } },
+          { name: "milestoneId", in: "path", required: true, schema: { type: "string" } },
+        ],
+        responses: {
+          "200": { description: "Proposal rejected" },
         },
       },
     },

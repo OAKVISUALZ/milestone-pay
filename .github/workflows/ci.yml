@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
-    branches: [main]
+    branches: [main, master]
 
 jobs:
   contracts:
@@ -21,15 +21,31 @@ jobs:
 
       - name: Run Contract Tests
         working-directory: contracts/escrow
-        run: cargo test --verbose
+        run: cargo test --verbose --locked
 
       - name: Build Contract WASM
         working-directory: contracts/escrow
-        run: cargo build --target wasm32-unknown-unknown --release
+        run: cargo build --target wasm32-unknown-unknown --release --locked
 
   node-packages:
-    name: TypeScript Packages & Apps Checks
+    name: TypeScript Workspaces & PostgreSQL Integration
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: milestonepay_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:password@localhost:5432/milestonepay_test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -43,11 +59,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Typecheck
+      - name: Apply Prisma Migrations to PostgreSQL
+        run: npx prisma migrate deploy --schema=./apps/api/prisma/schema.prisma
+
+      - name: Run Workspace Typecheck
         run: npm run typecheck
 
-      - name: Run Test Suites
+      - name: Run PostgreSQL Integration Tests
+        run: npm run test:db --workspace=@milestone-pay/api
+
+      - name: Run All Workspace Tests
         run: npm run test
 
-      - name: Build Packages & Apps
+      - name: Run SDK Mutual-Refund Coordination Example
+        run: npm run example:mutual-refund --workspace=@milestone-pay/sdk
+
+      - name: Build All Workspaces
         run: npm run build

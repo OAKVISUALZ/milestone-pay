@@ -13,6 +13,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { stroopsToXlm } from "@milestone-pay/shared";
+import { MutualRefundModal } from "./MutualRefundModal";
 
 interface MilestoneProps {
   milestone: {
@@ -33,6 +34,9 @@ interface MilestoneProps {
   clientAddress: string;
   freelancerAddress: string;
   currentAddress: string | null;
+  projectId?: string;
+  agreementId?: number | null;
+  tokenAddress?: string;
   onFund: (milestoneId: string) => Promise<void>;
   onRelease: (milestoneId: string) => Promise<void>;
   onRefund: (milestoneId: string) => Promise<void>;
@@ -41,6 +45,7 @@ interface MilestoneProps {
     milestoneId: string,
     data: { deliverableUrl: string; notes: string; commitOrHash?: string }
   ) => Promise<void>;
+  onStatusUpdated?: () => void;
 }
 
 export function MilestoneCard({
@@ -48,13 +53,18 @@ export function MilestoneCard({
   clientAddress,
   freelancerAddress,
   currentAddress,
+  projectId,
+  agreementId,
+  tokenAddress,
   onFund,
   onRelease,
   onRefund,
   onCancel,
   onSubmitDeliverable,
+  onStatusUpdated,
 }: MilestoneProps) {
   const [submittingDeliverable, setSubmittingDeliverable] = useState(false);
+  const [isRefundModalOpen, setIsRefundModalOpen] = useState(false);
   const [deliverableUrl, setDeliverableUrl] = useState("");
   const [deliverableNotes, setDeliverableNotes] = useState("");
   const [txStatus, setTxStatus] = useState<string | null>(null);
@@ -281,7 +291,13 @@ export function MilestoneCard({
             )}
 
             <button
-              onClick={() => handleAction(() => onRefund(milestone.id), "Mutual Refund")}
+              onClick={() => {
+                if (projectId) {
+                  setIsRefundModalOpen(true);
+                } else {
+                  handleAction(() => onRefund(milestone.id), "Mutual Refund");
+                }
+              }}
               className="inline-flex items-center gap-1.5 text-slate-700 hover:text-purple-700 hover:bg-purple-50 border border-slate-300 text-xs font-medium px-3 py-2 rounded-lg transition-colors"
               title="Requires authorization from both client and freelancer"
             >
@@ -354,6 +370,23 @@ export function MilestoneCard({
             </button>
           </div>
         </form>
+      )}
+
+      {projectId && (
+        <MutualRefundModal
+          isOpen={isRefundModalOpen}
+          onClose={() => setIsRefundModalOpen(false)}
+          project={{
+            id: projectId,
+            agreementId: agreementId ?? null,
+            clientAddress,
+            freelancerAddress,
+            tokenAddress: tokenAddress || "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
+          }}
+          milestone={milestone}
+          walletAddress={currentAddress}
+          onStatusUpdated={onStatusUpdated}
+        />
       )}
     </div>
   );

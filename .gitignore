@@ -10,7 +10,7 @@ yarn-error.log*
 
 # Rust / Soroban
 target/
-Cargo.lock
+*.tsbuildinfo
 
 # Environment & Secrets
 .env

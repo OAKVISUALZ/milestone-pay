@@ -10,7 +10,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
-    "test": "vitest run tests/api.test.ts",
+    "test": "vitest run tests/api.test.ts tests/refund-coordination.test.ts",
     "test:db": "vitest run tests/postgres.integration.test.ts"
   },
   "dependencies": {

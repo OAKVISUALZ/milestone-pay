@@ -1,0 +1,43 @@
+name: Testnet Live Validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      client_secret:
+        description: "Optional Client Secret (funded via Friendbot if empty)"
+        required: false
+      freelancer_secret:
+        description: "Optional Freelancer Secret (funded via Friendbot if empty)"
+        required: false
+
+jobs:
+  validate:
+    name: Live Stellar Testnet On-Chain Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32v1-none, wasm32-unknown-unknown
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Contract WASM
+        working-directory: contracts/escrow
+        run: cargo build --target wasm32v1-none --release --locked
+
+      - name: Run Testnet Validation Script
+        env:
+          CLIENT_SECRET: ${{ github.event.inputs.client_secret }}
+          FREELANCER_SECRET: ${{ github.event.inputs.freelancer_secret }}
+        run: npx tsx scripts/testnet-validate.ts
