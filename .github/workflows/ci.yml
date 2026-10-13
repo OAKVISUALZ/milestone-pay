@@ -64,8 +64,10 @@ jobs:
           npm run build --workspace=@milestone-pay/shared
           npm run build --workspace=@milestone-pay/sdk
 
-      - name: Apply Prisma Migrations to PostgreSQL
-        run: npx prisma migrate deploy --schema=./apps/api/prisma/schema.prisma
+      - name: Generate Prisma Client & Apply Migrations
+        run: |
+          npx prisma generate --schema=./apps/api/prisma/schema.prisma
+          npx prisma migrate deploy --schema=./apps/api/prisma/schema.prisma
 
       - name: Run Workspace Typecheck
         run: npm run typecheck
